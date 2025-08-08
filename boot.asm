@@ -11,7 +11,18 @@ start:
     mov si, msg_loading
     call print_string
     
-    ; 这里可以添加内核加载代码
+    ; 在boot.asm的jmp $前添加:
+    mov ah, 0x02    ; 读取扇区
+    mov al, 1       ; 扇区数
+    mov ch, 0       ; 柱面号
+    mov cl, 2       ; 扇区号 (从2开始)
+    mov dh, 0       ; 磁头号
+    mov bx, 0x1000  ; 加载地址
+    mov es, bx
+    mov bx, 0x0000
+    int 0x13
+
+    call 0x1000:0x0000 ; 跳转到内核
     
     jmp $ ; 无限循环
 
